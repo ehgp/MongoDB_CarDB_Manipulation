@@ -1,0 +1,97 @@
+> use carsdb
+switched to db carsdb
+> db.american.insertMany([{"make":"chevrolet", "model":"equinox"},{"make":"ford", "model":"explorer"},{"make":"dodge", "model":"charger"},{"make":"ford", "model":"expedition"},{"make":"chevrolet", "model":"suburban"}])
+{
+        "acknowledged" : true,
+        "insertedIds" : [
+                ObjectId("5e4b781fbeebb56013d80356"),
+                ObjectId("5e4b781fbeebb56013d80357"),
+                ObjectId("5e4b781fbeebb56013d80358"),
+                ObjectId("5e4b781fbeebb56013d80359"),
+                ObjectId("5e4b781fbeebb56013d8035a")
+        ]
+}
+> db.restofworld.insertMany([{"make":"honda", "model":"accord"},{"make":"honda", "model":"civic"},{"make":"nissan", "model":"maxima"},{"make":"genesis", "model":"G90"}])
+{
+        "acknowledged" : true,
+        "insertedIds" : [
+                ObjectId("5e4b7823beebb56013d8035b"),
+                ObjectId("5e4b7823beebb56013d8035c"),
+                ObjectId("5e4b7823beebb56013d8035d"),
+                ObjectId("5e4b7823beebb56013d8035e")
+        ]
+}
+> var collections = db.getCollectionNames();
+> for(var i = 0; i< collections.length; i++) {
+...    print('Collection: ' + collections[i]); // print the name of each collection
+...    db.getCollection(collections[i]).find().forEach(printjson); //prints json of each document
+... }
+Collection: american
+{
+        "_id" : ObjectId("5e4b781fbeebb56013d80356"),
+        "make" : "chevrolet",
+        "model" : "equinox"
+}
+{
+        "_id" : ObjectId("5e4b781fbeebb56013d80357"),
+        "make" : "ford",
+        "model" : "explorer"
+}
+{
+        "_id" : ObjectId("5e4b781fbeebb56013d80358"),
+        "make" : "dodge",
+        "model" : "charger"
+}
+{
+        "_id" : ObjectId("5e4b781fbeebb56013d80359"),
+        "make" : "ford",
+        "model" : "expedition"
+}
+{
+        "_id" : ObjectId("5e4b781fbeebb56013d8035a"),
+        "make" : "chevrolet",
+        "model" : "suburban"
+}
+Collection: restofworld
+{
+        "_id" : ObjectId("5e4b7823beebb56013d8035b"),
+        "make" : "honda",
+        "model" : "accord"
+}
+{
+        "_id" : ObjectId("5e4b7823beebb56013d8035c"),
+        "make" : "honda",
+        "model" : "civic"
+}
+{
+        "_id" : ObjectId("5e4b7823beebb56013d8035d"),
+        "make" : "nissan",
+        "model" : "maxima"
+}
+{
+        "_id" : ObjectId("5e4b7823beebb56013d8035e"),
+        "make" : "genesis",
+        "model" : "G90"
+}
+> var collections = db.getCollectionNames();
+> for(var i = 0; i< collections.length; i++) {
+...    print('Collection: ' + collections[i]); // print the name of each collection
+...    db.getCollection(collections[i]).aggregate({$group:{_id:"$make",total_models:{$sum :1}}}).forEach(printjson); //aggregates and prints how many models per make.
+... }
+Collection: american
+{ "_id" : "ford", "total_models" : 2 }
+{ "_id" : "dodge", "total_models" : 1 }
+{ "_id" : "chevrolet", "total_models" : 2 }
+Collection: restofworld
+{ "_id" : "honda", "total_models" : 2 }
+{ "_id" : "genesis", "total_models" : 1 }
+{ "_id" : "nissan", "total_models" : 1 }
+> var collections = db.getCollectionNames();
+> for(var i = 0; i< collections.length; i++) {
+...    print('Collection: ' + collections[i]); // print the name of each collection
+...    print('number of cars: ' + db.getCollection(collections[i]).countDocuments({})); //counts and prints the amount of cars per collection
+... }
+Collection: american
+number of cars: 5
+Collection: restofworld
+number of cars: 4
